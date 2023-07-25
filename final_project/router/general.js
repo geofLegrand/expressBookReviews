@@ -56,7 +56,6 @@ public_users.get("/isbn/:isbn", function (req, res) {
     }
   })
     .then((response) => {
-      console.log(response);
       if (typeof response[isbn] !== "undefined") {
         return res.status(200).json(response);
       } else {
@@ -73,24 +72,31 @@ public_users.get("/isbn/:isbn", function (req, res) {
 public_users.get("/author/:author", async function (req, res) {
   const author = req.params.author;
   let lstbook = []; 
-  //Write your code here
-  try {
-    Object.keys(books).forEach((key) => {
-      if (books[key].author === author) {
-        let book = {}
-        book[key] = books[key]
-        lstbook.push(book)
-      }
-    });
-
-    if (lstbook.length > 0) {
-      return res.status(200).json(lstbook);
-    } else {
-      return res.status(400).json({ message: `books not found !` });
-    }
-  } catch (error) {
-    return res.status(500).json({ error: error.message || error });
-  }
+   const myPromise = new Promise((resolve,reject) => {
+        try {
+          Object.keys(books).forEach((key) => {
+            if (books[key].author === author) {
+              let book = {}
+              book[key] = books[key]
+              lstbook.push(book)
+            }
+          });
+          resolve(lstbook)
+        } catch (error) {
+          reject(error)
+        }
+      })
+        
+      myPromise.then((data) => {
+        if (data.length > 0) {
+          return res.status(200).json(data);
+        } else {
+          return res.status(400).json({
+            message: `books not found !` 
+          });
+        }
+      });
+      myPromise.catch((error) => res.status(500).json({ error: error.message || error }));
 });
 
 // @Description Get all books based on title
@@ -117,7 +123,7 @@ public_users.get("/title/:title", function (req, res) {
       if (response.length > 0) {
         return res.status(200).json(response);
       } else {
-        return res.status(400).json({ message: `books not found !` });
+        return res.status(400).json({ message: `This books not found !` });
       }
     })
     .catch((error) => res.status(500).json({ error: error.message || error }));
@@ -149,5 +155,6 @@ public_users.get("/review/:isbn", function (req, res) {
   });
   myPromise.catch((error) => res.status(500).json(error));
 });
+
 
 module.exports.general = public_users;
