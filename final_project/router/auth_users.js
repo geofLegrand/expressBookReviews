@@ -117,7 +117,7 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
   _book[parseInt(isbn)] = book;
   res
     .status(201)
-    .json({ message: `Review  added/updated successfully`, book: _book });
+    .json({ message: `Review  deleted successfully`, book: _book });
 });
 
 module.exports.authenticated = regd_users;

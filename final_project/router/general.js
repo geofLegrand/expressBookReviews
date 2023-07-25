@@ -69,7 +69,7 @@ public_users.get("/isbn/:isbn", function (req, res) {
 
 // @Description Get book details based on author
 //
-public_users.get("/author/:author", async function (req, res) {
+public_users.get("/author/:author",  function (req, res) {
   const author = req.params.author;
   let lstbook = []; 
    const myPromise = new Promise((resolve,reject) => {
@@ -106,7 +106,6 @@ public_users.get("/title/:title", function (req, res) {
   let lstbook = []; 
   new Promise(function (resolve, reject) {
     try {
-      //const book = Object.values(books).filter((e) => e.title === title);
       Object.keys(books).forEach((key) => {
         if (books[key].title === title) {
           let book = {}
@@ -127,7 +126,6 @@ public_users.get("/title/:title", function (req, res) {
       }
     })
     .catch((error) => res.status(500).json({ error: error.message || error }));
-  //Write your code here
 });
 
 // @Description  Get book review
